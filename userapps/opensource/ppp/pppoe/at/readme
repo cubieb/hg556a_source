@@ -1,0 +1,404 @@
+
+// ... 的使用
+#define dprintf(fmt, args...) cprintf("%s: " fmt, __FUNCTION__, ## args)
+
+
+// 手工启动拨号命令
+syslogd;pppd /dev/usb/tts/0 -d -g -k -i 100 -u me -p pswd 
+
+#-t 1500
+
+// nat转换
+			{
+				int timeout = 15;
+				while (ifconfig("ppp0", IFUP, NULL, NULL) && timeout--)
+					sleep(1);
+				start_firewall2("ppp0");
+			}
+
+// 编译选项
+-D_REENTRANT
+
+
+pppd /dev/usb/tts/0 -d -g -k -i 100 -u me -p pswd &
+
+flash -offset=0x20000 -noheader 192.168.1.100:linux.trx flash0
+
+ping 218.30.13.52
+
+
+traceroute 218.30.13.52
+
+百度
+traceroute 220.181.27.5
+
+dns地址
+202.96.154.15
+
+
+
+// 进程的启动
+
+		if (strcmp(wan_proto, "ppp") == 0) {
+			char *pppoe_argv[] = { "pppd",
+					       nvram_safe_get(strcat_r(prefix, "ifname", tmp)),
+					       "-u", nvram_safe_get(strcat_r(prefix, "ppp_username", tmp)),
+					       "-p", nvram_safe_get(strcat_r(prefix, "ppp_passwd", tmp)),
+					       "-t", nvram_safe_get(strcat_r(prefix, "ppp_mtu", tmp)),
+					       "-i", nvram_match(strcat_r(prefix, "ppp_demand", tmp), "1") ?
+					       		nvram_safe_get(strcat_r(prefix, "ppp_idletime", tmp)) : "0",
+					       NULL, NULL,	/* pppoe_service */
+					       NULL, NULL,	/* pppoe_ac */
+					       NULL,		/* pppoe_keepalive */
+					       NULL, NULL,	/* ppp unit requested */
+					       NULL
+			}, **arg;
+			int timeout = 5;
+			char pppunit[] = "XXXXXXXXXXXX";
+
+			/* Add optional arguments */
+			for (arg = pppoe_argv; *arg; arg++);
+			if (nvram_match(strcat_r(prefix, "pppoe_demand", tmp), "1") || 
+			    nvram_match(strcat_r(prefix, "pppoe_keepalive", tmp), "1"))
+				*arg++ = "-k";
+
+			/* launch pppoe client daemon */
+			_eval(pppoe_argv, NULL, 0, &pid);
+
+			/* ppp interface name is referenced from this point on */
+			wan_ifname = nvram_safe_get(strcat_r(prefix, "pppoe_ifname", tmp));
+		}
+
+
+// 进程的注销
+void
+stop_wan(void)
+{
+	char name[80], *next, signal[] = "XXXX";
+	
+	eval("killall", "stats");
+	eval("killall", "ntpclient");
+
+	/* Shutdown and kill all possible tasks */
+	eval("killall", "ip-up");
+	eval("killall", "ip-down");
+	snprintf(signal, sizeof(signal), "-%d", SIGHUP);
+/* HUAWEI HGW lichangqing 45517 2005年8月19日
+  */
+/*
+	eval("killall", signal, "pppoecd");
+	eval("killall", "pppoecd");
+*/
+	eval("killall", signal, "pppd");
+	eval("killall", "pppd");
+/* end modify */
+
+
+	snprintf(signal, sizeof(signal), "-%d", SIGUSR2);
+	eval("killall", signal, "udhcpc");
+	eval("killall", "udhcpc");
+
+	/* Bring down WAN interfaces */
+	foreach(name, nvram_safe_get("wan_ifnames"), next)
+		ifconfig(name, 0, "0.0.0.0", NULL);
+
+	/* Remove dynamically created links */
+	unlink("/tmp/udhcpc");
+	
+	unlink("/tmp/ppp/ip-up");
+	unlink("/tmp/ppp/ip-down");
+	rmdir("/tmp/ppp");
+
+	dprintf("done\n");
+}
+
+
+日志算法
+#if 0
+        if (log_pos > 16 * 1024) {
+            pch = tmp;
+            lseek(g_log_fd, 8 * 1024, SEEK_SET);
+
+            log_pos = 0;
+            while(len = read(g_log_fd, pch, 1024)) {
+                if (len < 0){
+                    if (EINTR == errno)
+                        continue;
+                    g_log_fd = -1;
+                    write(log_to_fd, "log_write error\n", n)
+                    break;
+                }
+                log_pos += len;
+                if (log_pos >= 12 * 1024)
+                    break;
+                pch += len;
+            }
+            
+            pch = tmp;
+            if (g_log_fd > 0) {
+                close(g_log_fd);
+                g_log_fd = open("/var/log/ppp.log", O_CREAT | O_RDWR | O_TRUNC);
+            }
+            
+            if (g_log_fd > 0) {
+                while(len = write(g_log_fd, pch, 1024)) {
+                    ;
+                }
+            }
+        }
+#endif
+
+
+
+modem 注意事项:
+(1) pcxx.c 554 
+	/*
+	 * If we're a modem control device and HUPCL is on, drop RTS & DTR.
+	 */
+(2)	 
+
+
+
+第一次ppp协商报文:
+
+rcvd [LCP ConfReq id=0xe9 <mru 1500> <magic 0x3c83f> <pcomp> <accomp>] <peer first lauch>
+sent [LCP ConfReq id=0x1 <asyncmap 0x0> <magic 0xa69a88b4>]
+sent [LCP ConfRej id=0xe9 <mru 1500> <pcomp> <accomp>]
+rcvd [LCP ConfAck id=0x1 <asyncmap 0x0> <magic 0xa69a88b4>]
+rcvd [LCP ConfReq id=0xea <magic 0x3c83f>]
+sent [LCP ConfAck id=0xea <magic 0x3c83f>]
+
+sent [LCP EchoReq id=0x0 magic=0xa69a88b4]
+
+sent [IPCP ConfReq id=0x1 <addr 0.0.0.0> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+
+rcvd [LCP EchoRep id=0x0 magic=0x3c83f a6 9a]
+
+rcvd [IPCP ConfReq id=0xbd <addr 130.29.181.203> <compress VJ 0f 01>]
+sent [IPCP ConfRej id=0xbd <compress VJ 0f 01>]
+
+rcvd [IPCP ConfRej id=0x1 <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+sent [IPCP ConfReq id=0x2 <addr 0.0.0.0>]
+rcvd [IPCP ConfReq id=0xbe <addr 130.29.181.203>]
+sent [IPCP ConfAck id=0xbe <addr 130.29.181.203>]
+rcvd [IPCP ConfNak id=0x2 <addr 169.254.245.20>]
+sent [IPCP ConfReq id=0x3 <addr 169.254.245.20>]
+rcvd [IPCP ConfAck id=0x3 <addr 169.254.245.20>]
+Local IP address changed to 169.254.245.20
+Remote IP address changed to 130.29.181.203
+sent [IP data] 45 00 00 d4 00 00 40 00 ...
+Script /tmp/ppp/ip-up started (pid 98)
+Script /tmp/ppp/ip-up finished (pid 98), status = 0x0
+
+
+
+syswatch 重新启动后的失败协商报文
+(1)   Connect: ppp0 <--> /dev/usb/tts/0
+rcvd [LCP ConfReq id=0x79 <mru 1500> <magic 0x39567> <pcomp> <accomp>]
+sent [LCP ConfReq id=0x4 <asyncmap 0x0> <magic 0x95832abf>]
+sent [LCP ConfRej id=0x79 <mru 1500> <pcomp> <accomp>]
+
+sent [LCP ConfReq id=0x4 <asyncmap 0x0> <magic 0x95832abf>]
+sent [LCP ConfReq id=0x4 <asyncmap 0x0> <magic 0x95832abf>]
+
+
+(2)  Connect: ppp0 <--> /dev/usb/tts/0
+rcvd [LCP ConfReq id=0x49 <mru 1500> <magic 0x47742> <pcomp> <accomp>]
+sent [LCP ConfReq id=0x1 <asyncmap 0x0> <magic 0x1764748e>]
+sent [LCP ConfRej id=0x49 <mru 1500> <pcomp> <accomp>]
+
+sent [LCP ConfReq id=0x1 <asyncmap 0x0> <magic 0x1764748e>]
+sent [LCP ConfReq id=0x1 <asyncmap 0x0> <magic 0x1764748e>]
+
+sent [LCP ConfReq id=0x1 <asyncmap 0x0> <magic 0x1764748e>]
+sent [LCP ConfReq id=0x1 <asyncmap 0x0> <magic 0x1764748e>]
+
+sent [LCP ConfReq id=0x1 <asyncmap 0x0> <magic 0x1764748e>]
+sent [LCP ConfReq id=0x1 <asyncmap 0x0> <magic 0x1764748e>]
+sent [LCP ConfReq id=0x1 <asyncmap 0x0> <magic 0x1764748e>]
+sent [LCP ConfReq id=0x1 <asyncmap 0x0> <magic 0x1764748e>]
+sent [LCP ConfReq id=0x1 <asyncmap 0x0> <magic 0x1764748e>]
+Connection terminated.
+
+
+
+killall pppd的断开过程:
+
+Script /tmp/ppp/ip-down started (pid 105)
+sent [LCP TermReq id=0x2 "User request"]
+
+Script /tmp/ppp/ip-down finished (pid 105), status = 0x0
+rcvd [LCP TermAck id=0x2]
+
+Connection terminated.
+Connect time 1.2 minutes.
+Sent 1122 bytes, received 698 bytes.
+
+
+允许peer协商mru的过程:
+Connect: ppp0 <--> /dev/usb/tts/0
+rcvd [LCP ConfReq id=0x40 <mru 1500> <magic 0x61a2f> <pcomp> <accomp>]
+sent [LCP ConfReq id=0x1 <asyncmap 0x0> <magic 0xfc916239>]
+sent [LCP ConfAck id=0x40 <mru 1500> <magic 0x61a2f> <pcomp> <accomp>] // 
+rcvd [LCP ConfAck id=0x1 <asyncmap 0x0> <magic 0xfc916239>]
+sent [LCP EchoReq id=0x0 magic=0xfc916239]
+sent [IPCP ConfReq id=0x1 <addr 0.0.0.0> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+rcvd [IPCP ConfReq id=0x94 <addr 130.29.181.203> <compress VJ 0f 01>]
+sent [IPCP ConfRej id=0x94 <compress VJ 0f 01>]
+rcvd [LCP EchoRep id=0x0 magic=0x61a2f 00 2d]
+rcvd [IPCP ConfRej id=0x1 <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+sent [IPCP ConfReq id=0x2 <addr 0.0.0.0>]
+rcvd [IPCP ConfReq id=0x95 <addr 130.29.181.203>]
+sent [IPCP ConfAck id=0x95 <addr 130.29.181.203>]
+rcvd [IPCP ConfNak id=0x2 <addr 169.254.245.20>]
+sent [IPCP ConfReq id=0x3 <addr 169.254.245.20>]
+rcvd [IPCP ConfAck id=0x3 <addr 169.254.245.20>]
+Local IP address changed to 169.254.245.20
+Remote IP address changed to 130.29.181.203
+sent [IP data] 45 00 00 d4 00 00 40 00 ...
+Script /tmp/ppp/ip-up started (pid 97)
+Script /tmp/ppp/ip-up finished (pid 97), status = 0x0
+
+
+// at拨号造成超时，ATH没有起作用
+[at/pppd_thread.c:  60:pid= 89] AT dial #777 ... ...
+>      at/at_sm.c: 592:pid= 88] pcui writing at cmd <AT^SYSINFO
+[      at/at_sm.c: 540:pid= 88] pcui wrote 11 bytes
+[      at/at_sm.c: 603:pid= 88] waiting rcv thread ... ...
+[      at/at_sm.c: 735:pid= 89] modem : wait for report msg timeout
+
+[at/pppd_thread.c:  69:pid= 89] at dial failed
+[      at/at_sm.c: 610:pid= 88] timeout : retrying ...
+[      at/at_sm.c: 540:pid= 88] pcui wrote 3 bytes
+[      at/at_sm.c: 735:pid= 89] modem : wait for report msg timeout
+
+[at/pppd_thread.c:  72:pid= 89] modem hung up : failed
+[           tty.c: 674:pid= 89] AT dail faild
+[          main.c: 513:pid= 89] connect : at dail failed
+[      at/at_sm.c: 620:pid= 88] at_sm timeout
+[  at/at_thread.c: 697:pid= 88] cm500 shakehand timeout
+[  at/utils_lib.c: 499:pid= 88] timer : has stopped
+
+[  at/at_thread.c:1463:pid= 88] cm500 shakehand timeout, cm500 resetting ...
+[      at/at_sm.c:1394:pid= 88] killing rcv thread
+[      at/at_sm.c:1409:pid= 88] rcv thread killed pid = 91
+[      at/at_sm.c: 850:pid= 91] SIGTERM : rcv thread
+[      at/at_sm.c: 854:pid= 91] SIGTERM : at rcv setlongjmp
+[      at/at_sm.c:1178:pid= 91] rcv : thread exited sigjmp
+[  at/at_thread.c: 532:pid= 88] SIGCHILD : main thread
+[      at/at_sm.c:1415:pid= 88] waitpid : thread 91 exited
+
+
+// peer ppp 发起协商， 没有协商到dns
+
+(1)  peer首先发起协商mru, asyncmap, auth chap MD5, magic, pcomp, accomp请求
+rcvd [LCP ConfReq id=0x1 <mru 1500> <asyncmap 0x0> <auth chap MD5> <magic 0xbe633a63> <pcomp> <accomp>]
+
+
+<1> bcm ppp 开始down
+Script /tmp/ppp/ip-down started (pid 122)
+
+
+<2> bcm发起协商, 要求协商asyncmap 和magic
+sent [LCP ConfReq id=0x3 <asyncmap 0x0> <magic 0x2e105bd8>]
+
+
+<3> 响应(1) 的请求
+sent [LCP ConfAck id=0x1 <mru 1500> <asyncmap 0x0> <auth chap MD5> <magic 0xbe633a63> <pcomp> <accomp>]
+
+
+<4> bcm 已经down
+Script /tmp/ppp/ip-down finished (pid 122), status = 0x0
+
+
+(2) peer ack <2> 的asyncmap 和magic协商请求
+rcvd [LCP ConfAck id=0x3 <asyncmap 0x0> <magic 0x2e105bd8>]
+
+
+<5> bcm 发起echo 请求
+sent [LCP EchoReq id=0x0 magic=0x2e105bd8]
+
+
+(3) peer 发起要求使用CHAP 进行认证的请求
+rcvd [CHAP Challenge id=0x1 <d6b410b413ebe5600d583b8352c292b8>, name = "pdsn"]
+
+
+<6> bcm向对端发送密码
+sent [CHAP Response id=0x1 <228f4dc3fd0201282223d02317ef3bd9>, name = "pdsn@pdsn.hw"]
+
+
+(4) peer 响应<5> 的echo 请求
+rcvd [LCP EchoRep id=0x0 magic=0x0]
+
+
+(5) peer 响应密码认证成功
+rcvd [CHAP Success id=0x1 "Welcome to pdsn."]
+
+
+Remote message: Welcome to pdsn.
+
+<7> bcm 希望使用0.0.0.0 作为ip 和dns
+sent [IPCP ConfReq id=0x7 <addr 0.0.0.0> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+
+
+(6) peer要求使用2.2.2.2作为peer端的ip地址
+rcvd [IPCP ConfReq id=0x0 <addr 2.2.2.2>]
+
+
+<8> bcm 同意peer 使用2.2.2.2 作为其ip 地址
+sent [IPCP ConfAck id=0x0 <addr 2.2.2.2>]
+
+
+(7) peer 拒绝bcm使用 0.0.0.0作为dns,  所以获取不到dns
+rcvd [IPCP ConfRej id=0x7 <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+
+
+<9> bcm再次请求使用0.0.0.0 作为ip地址
+sent [IPCP ConfReq id=0x8 <addr 0.0.0.0>]
+
+
+(10) peer 不同意使用0.0.0.0 作为ip地址，介意使用3.3.3.137作为ip地址
+rcvd [IPCP ConfNak id=0x8 <addr 3.3.3.137>]
+
+
+<10> bcm 再次请求使用3.3.3.137  作为ip地址
+sent [IPCP ConfReq id=0x9 <addr 3.3.3.137>]
+
+
+(11) peer 同意使用3.3.3.137 作为bcm的ip地址
+rcvd [IPCP ConfAck id=0x9 <addr 3.3.3.137>]
+
+
+Local IP address changed to 3.3.3.137
+Script /tmp/ppp/ip-up started (pid 124)
+Script /tmp/ppp/ip-up finished (pid 124), status = 0x0
+
+
+
+
+// 重新协商0930
+
+rcvd [LCP ConfReq id=0x1 <mru 1500> <asyncmap 0x0> <auth chap MD5> <magic 0xc3358138> <pcomp> <accomp>]
+Script /tmp/ppp/ip-down started (pid 97)
+sent [LCP ConfReq id=0x2 <asyncmap 0x0> <magic 0x739486a7>]
+sent [LCP ConfAck id=0x1 <mru 1500> <asyncmap 0x0> <auth chap MD5> <magic 0xc3358138> <pcomp> <accomp>]
+Script /tmp/ppp/ip-down finished (pid 97), status = 0x0
+rcvd [LCP EchoRep id=0x18 magic=0x0]
+rcvd [LCP ConfAck id=0x2 <asyncmap 0x0> <magic 0x739486a7>]
+sent [LCP EchoReq id=0x0 magic=0x739486a7]
+rcvd [CHAP Challenge id=0x1 <7e9f409db1c278ca390b65baced6b31d>, name = "pdsn"]
+sent [CHAP Response id=0x1 <73b7a3f816a8159d66eb470bb78bef7e>, name = "pdsn@pdsn.hw"]
+rcvd [LCP EchoRep id=0x0 magic=0x0]
+rcvd [CHAP Success id=0x1 "Welcome to pdsn."]
+Remote message: Welcome to pdsn.
+sent [IPCP ConfReq id=0x4 <addr 0.0.0.0> <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+rcvd [IPCP ConfReq id=0x0 <addr 2.2.2.2>]
+sent [IPCP ConfAck id=0x0 <addr 2.2.2.2>]
+rcvd [IPCP ConfRej id=0x4 <ms-dns1 0.0.0.0> <ms-dns3 0.0.0.0>]
+sent [IPCP ConfReq id=0x5 <addr 0.0.0.0>]
+rcvd [IPCP ConfNak id=0x5 <addr 3.3.4.135>]
+sent [IPCP ConfReq id=0x6 <addr 3.3.4.135>]
+rcvd [IPCP ConfAck id=0x6 <addr 3.3.4.135>]
+Local IP address changed to 3.3.4.135
+Script /tmp/ppp/ip-up started (pid 99)
+Script /tmp/ppp/ip-up finished (pid 99), status = 0x0

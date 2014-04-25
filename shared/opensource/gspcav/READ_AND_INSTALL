@@ -1,0 +1,347 @@
+ README AND INSTALL
+
+What is it?
+===========
+This is version 1.00.xx of the "gspca" video for linux (v4l1) driver, providing
+support for webcams and digital cameras based on the  range of chips
+manufactured by SunPlus Sonix Z-star Vimicro Conexant Etoms Transvision Mars-Semi Pixart
+Gspca have a strong history. The project born with spca50x for Sunplus chipset become spca5xx to support a large range of chipset,
+and is now set as gspca. GSPCA mean "Generic Software Package for Camera Adaptator".
+ 
+Please address all correspondence to <mxhaard at magic dot fr>, or
+make use of the bug/support/patch tracking facilities provided by SourceForge,
+at <http://sourceforge.net/projects/spca50x/>.
+
+License:
+========
+		    GNU GENERAL PUBLIC LICENSE
+		       Version 2, June 1991
+see the include license document.
+
+Content:
+========
+gspcav1 :
+	 This folder is set with v4l1 support fully functionnal 
+gspcav2 :
+	This folder is set with v4l2 driver under construction 
+gspcagui: 
+	A common application for webcaming under construction
+	The grabber is implemented for v4l1 with picture adjustement
+	 
+Disclaimer
+==========
+We believe that this driver will perform correctly in many circumstances.
+It is, however, experimental code, running at the kernel level, and may
+potentially cause serious data corruption, or worse.
+
+Do not use this driver unless you are prepared for this eventuality.
+
+Use of this driver constitutes an agreement that no-one other than yourself may
+be held responsible for any effects caused by the driver, ill or otherwise.
+
+What cameras are supported?
+===========================
+
+Currently, the following cameras are supported by this driver:
+           
+	       Vendor ID  Device ID  Support Summary
+               ---------  ---------  ---------------
+    {USB_DEVICE(0x0733, 0x0430)},	/* Intel PC Camera Pro */
+    {USB_DEVICE(0x0733, 0x0401)},	/* Intel Create and Share */
+    {USB_DEVICE(0x99FA, 0x8988)},	/* Grandtec V.cap */
+    {USB_DEVICE(0x0733, 0x0402)},	/* ViewQuest M318B */
+    {USB_DEVICE(0x0733, 0x0110)},	/* ViewQuest VQ110 */
+    {USB_DEVICE(0x040A, 0x0002)},	/* Kodak DVC-325 */
+    {USB_DEVICE(0x055f, 0xc420)},	/* Mustek gSmart Mini 2 */
+    {USB_DEVICE(0x055f, 0xc520)},	/* Mustek gSmart Mini 3 */
+    {USB_DEVICE(0x041E, 0x400A)},	/* Creative PC-CAM 300 */
+    {USB_DEVICE(0x084D, 0x0003)},	/* D-Link DSC-350 */
+    {USB_DEVICE(0x041E, 0x400B)},	/* Creative PC-CAM 600 */
+    {USB_DEVICE(0x8086, 0x0630)},	/* Intel Pocket PC Camera */
+    {USB_DEVICE(0x8086, 0x0110)},	/* Intel Easy PC Camera */
+    {USB_DEVICE(0x0506, 0x00df)},	/* 3Com HomeConnect Lite */
+    {USB_DEVICE(0x040a, 0x0300)},	/* Kodak EZ200 */
+    {USB_DEVICE(0x04fc, 0x504b)},	/* Maxell MaxPocket LE 1.3 */
+    {USB_DEVICE(0x08ca, 0x2008)},	/* Aiptek Mini PenCam 2 M */
+    {USB_DEVICE(0x08ca, 0x0104)},	/* Aiptek PocketDVII 1.3 */
+    {USB_DEVICE(0x08ca, 0x2018)},	/* Aiptek Pencam SD 2M */
+    {USB_DEVICE(0x04fc, 0x504a)},	/* Aiptek Mini PenCam 1.3 */
+    {USB_DEVICE(0x055f, 0xc530)},	/* Mustek Gsmart LCD 3 */
+    {USB_DEVICE(0x055f, 0xc650)},	/* Mustek MDC5500Z */
+    {USB_DEVICE(0x052b, 0x1513)},	/* Megapix V4 */
+    {USB_DEVICE(0x08ca, 0x0103)},	/* Aiptek PocketDV */
+    {USB_DEVICE(0x0af9, 0x0010)},	/* Hama USB Sightcam 100 */
+    {USB_DEVICE(0x1776, 0x501c)},	/* Arowana 300K CMOS Camera */
+    {USB_DEVICE(0x08ca, 0x0106)},	/* Aiptek Pocket DV3100+ */
+    {USB_DEVICE(0x08ca, 0x2010)},	/* Aiptek PocketCam 3M */
+    {USB_DEVICE(0x0458, 0x7004)},	/* Genius VideoCAM Express V2 */
+    {USB_DEVICE(0x04fc, 0x0561)},	/* Flexcam 100 */
+    {USB_DEVICE(0x055f, 0xc430)},	/* Mustek Gsmart LCD 2 */
+    {USB_DEVICE(0x04fc, 0xffff)},	/* Pure DigitalDakota */
+    {USB_DEVICE(0xabcd, 0xcdee)},	/* Petcam */
+    {USB_DEVICE(0x04a5, 0x3008)},	/* Benq DC 1500 */
+    {USB_DEVICE(0x046d, 0x0960)},	/* Logitech Inc. ClickSmart 420 */
+    {USB_DEVICE(0x046d, 0x0901)},	/* Logitech Inc. ClickSmart 510 */
+    {USB_DEVICE(0x04a5, 0x3003)},	/* Benq DC 1300 */
+    {USB_DEVICE(0x0af9, 0x0011)},	/* Hama USB Sightcam 100 */
+    {USB_DEVICE(0x055f, 0xc440)},	/* Mustek DV 3000 */
+    {USB_DEVICE(0x041e, 0x4013)},	/* Creative Pccam750 */
+    {USB_DEVICE(0x060b, 0xa001)},	/* Maxell Compact Pc PM3 */
+    {USB_DEVICE(0x04a5, 0x300a)},	/* Benq DC3410 */
+    {USB_DEVICE(0x04a5, 0x300c)},	/* Benq DC1016 */
+    {USB_DEVICE(0x0461, 0x0815)},	/* Micro Innovation IC200 */
+    {USB_DEVICE(0x046d, 0x0890)},	/* Logitech QuickCam traveler */
+    {USB_DEVICE(0x10fd, 0x7e50)},	/* FlyCam Usb 100 */
+    {USB_DEVICE(0x06e1, 0xa190)},	/* ADS Instant VCD */
+    {USB_DEVICE(0x055f, 0xc220)},	/* Gsmart Mini */
+    {USB_DEVICE(0x0733, 0x2211)},	/* Jenoptik jdc 21 LCD */
+    {USB_DEVICE(0x046d, 0x0900)},	/* Logitech Inc. ClickSmart 310 */
+    {USB_DEVICE(0x055f, 0xc360)},	/* Mustek DV4000 Mpeg4  */
+    {USB_DEVICE(0x08ca, 0x2024)},	/* Aiptek DV3500 Mpeg4  */
+    {USB_DEVICE(0x046d, 0x0905)},	/* Logitech ClickSmart820  */
+    {USB_DEVICE(0x05da, 0x1018)},	/* Digital Dream Enigma 1.3 */
+    {USB_DEVICE(0x0c45, 0x6025)},	/* Xcam Shanga */
+    {USB_DEVICE(0x0733, 0x1311)},	/* Digital Dream Epsilon 1.3 */
+    {USB_DEVICE(0x041e, 0x401d)},	/* Creative Webcam NX ULTRA */
+    {USB_DEVICE(0x08ca, 0x2016)},	/* Aiptek PocketCam 2 Mega */
+    {USB_DEVICE(0x0734, 0x043b)},	/* 3DeMon USB Capture aka */
+    {USB_DEVICE(0x041E, 0x4018)},	/* Creative Webcam Vista (PD1100) */
+    {USB_DEVICE(0x0546, 0x3273)},	/* Polaroid PDC2030 */
+    {USB_DEVICE(0x041e, 0x401f)},	/* Creative Webcam Notebook PD1171 */
+    {USB_DEVICE(0x041e, 0x4017)},	/* Creative Webcam Mobile PD1090 */
+    {USB_DEVICE(0x046d, 0x08a2)},	/* Labtec Webcam Pro */
+    {USB_DEVICE(0x055f, 0xd003)},	/* Mustek WCam300A */
+    {USB_DEVICE(0x0458, 0x7007)},	/* Genius VideoCam V2 */
+    {USB_DEVICE(0x0458, 0x700c)},	/* Genius VideoCam V3 */
+    {USB_DEVICE(0x0458, 0x700f)},	/* Genius VideoCam Web V2 */
+    {USB_DEVICE(0x041e, 0x401e)},	/* Creative Nx Pro */
+    {USB_DEVICE(0x0c45, 0x6029)},	/* spcaCam@150 */
+    {USB_DEVICE(0x0c45, 0x6009)},	/* spcaCam@120 */
+    {USB_DEVICE(0x0c45, 0x600d)},	/* spcaCam@120 */
+    {USB_DEVICE(0x04fc, 0x5330)},	/* Digitrex 2110 */
+    {USB_DEVICE(0x055f, 0xc540)},	/* Gsmart D30 */
+    {USB_DEVICE(0x0ac8, 0x301b)},	/* Asam Vimicro */
+    {USB_DEVICE(0x041e, 0x403a)},	/* Creative Nx Pro 2 */
+    {USB_DEVICE(0x055f, 0xc211)},	/* Kowa Bs888e Microcamera */
+    {USB_DEVICE(0x0ac8, 0x0302)},	/* Z-star Vimicro zc0302 */
+    {USB_DEVICE(0x0572, 0x0041)},	/* Creative Notebook cx11646 */
+    {USB_DEVICE(0x08ca, 0x2022)},	/* Aiptek Slim 3200 */
+    {USB_DEVICE(0x046d, 0x0921)},	/* Labtec Webcam */
+    {USB_DEVICE(0x046d, 0x0920)},	/* QC Express */
+    {USB_DEVICE(0x0923, 0x010f)},	/* ICM532 cams */
+    {USB_DEVICE(0x055f, 0xc200)},	/* Mustek Gsmart 300 */
+    {USB_DEVICE(0x0733, 0x2221)},	/* Mercury Digital Pro 3.1p */
+    {USB_DEVICE(0x041e, 0x4036)},	/* Creative Live ! */
+    {USB_DEVICE(0x055f, 0xc005)},	/* Mustek Wcam300A */
+    {USB_DEVICE(0x041E, 0x403b)},	/* Creative Webcam Vista (VF0010) */
+    {USB_DEVICE(0x0545, 0x8333)},	/* Veo Stingray */
+    {USB_DEVICE(0x0545, 0x808b)},	/* Veo Stingray */
+    {USB_DEVICE(0x10fd, 0x8050)},	/* Typhoon Webshot II USB 300k */
+    {USB_DEVICE(0x0546, 0x3155)},	/* Polaroid PDC3070 */
+    {USB_DEVICE(0x046d, 0x0928)},	/* Logitech QC Express Etch2 */
+    {USB_DEVICE(0x046d, 0x092a)},	/* Logitech QC for Notebook */
+    {USB_DEVICE(0x046d, 0x08a0)},	/* Logitech QC IM */
+    {USB_DEVICE(0x0461, 0x0a00)},	/* MicroInnovation WebCam320 */
+    {USB_DEVICE(0x08ca, 0x2028)},	/* Aiptek PocketCam4M */
+    {USB_DEVICE(0x08ca, 0x2042)},	/* Aiptek PocketDV5100 */
+    {USB_DEVICE(0x08ca, 0x2060)},	/* Aiptek PocketDV5300 */
+    {USB_DEVICE(0x04fc, 0x5360)},	/* Sunplus Generic */
+    {USB_DEVICE(0x046d, 0x08a1)},	/* Logitech QC IM 0x08A1 +sound */
+    {USB_DEVICE(0x046d, 0x08a3)},	/* Logitech QC Chat */
+    {USB_DEVICE(0x046d, 0x08b9)},	/* Logitech QC IM ??? */
+    {USB_DEVICE(0x046d, 0x0929)},	/* Labtec Webcam Elch2 */
+    {USB_DEVICE(0x10fd, 0x0128)},	/* Typhoon Webshot II USB 300k 0x0128 */
+    {USB_DEVICE(0x102c, 0x6151)},	/* Qcam Sangha CIF */
+    {USB_DEVICE(0x102c, 0x6251)},	/* Qcam xxxxxx VGA */
+    {USB_DEVICE(0x04fc, 0x7333)},	/* PalmPixDC85 */
+    {USB_DEVICE(0x06be, 0x0800)},	/* Optimedia */
+    {USB_DEVICE(0x2899, 0x012c)},	/* Toptro Industrial */
+    {USB_DEVICE(0x06bd, 0x0404)},	/* Agfa CL20 */
+    {USB_DEVICE(0x046d, 0x092c)},	/* Logitech QC chat Elch2 */
+    {USB_DEVICE(0x0c45, 0x607c)},	/* Sonix sn9c102p Hv7131R */
+    {USB_DEVICE(0x0733, 0x3261)},	/* Concord 3045 spca536a */
+    {USB_DEVICE(0x0733, 0x1314)},	/* Mercury 2.1MEG Deluxe Classic Cam */
+    {USB_DEVICE(0x041e, 0x401c)},	/* Creative NX */
+    {USB_DEVICE(0x041e, 0x4034)},	/* Creative Instant P0620 */
+    {USB_DEVICE(0x041e, 0x4035)},	/* Creative Instant P0620D */
+    {USB_DEVICE(0x046d, 0x08ae)},	/* Logitech QuickCam for Notebooks */
+    {USB_DEVICE(0x055f, 0xd004)},	/* Mustek WCam300 AN */
+    {USB_DEVICE(0x046d, 0x092b)},	/* Labtec Webcam Plus */
+    {USB_DEVICE(0x0c45, 0x602e)},	/* Genius VideoCam Messenger */
+    {USB_DEVICE(0x0c45, 0x602c)},	/* Generic Sonix OV7630 */
+    {USB_DEVICE(0x093A, 0x050F)},	/* Mars-Semi Pc-Camera */
+    {USB_DEVICE(0x0458, 0x7006)},	/* Genius Dsc 1.3 Smart */
+    {USB_DEVICE(0x055f, 0xc630)},	/* Mustek MDC4000 */
+    {USB_DEVICE(0x046d, 0x08ad)},	/* Logitech QCCommunicate STX */
+    {USB_DEVICE(0x0c45, 0x602d)},	/* LIC-200 LG */
+    {USB_DEVICE(0x0c45, 0x6005)},	/* Sweex Tas5110 */
+    {USB_DEVICE(0x0c45, 0x613c)},	/* Sonix Pccam168 */
+    {USB_DEVICE(0x0c45, 0x6130)},	/* Sonix Pccam */
+    {USB_DEVICE(0x0c45, 0x60c0)},	/* Sangha Sn535 */
+    {USB_DEVICE(0x0c45, 0x60fc)},	/* LG-LIC300 */
+    {USB_DEVICE(0x0546, 0x3191)},	/* Polaroid Ion 80 */
+    {USB_DEVICE(0x0ac8, 0x305b)},	/* Z-star Vimicro zc0305b */
+    {USB_DEVICE(0x0c45, 0x6028)},	/* Sonix Btc Pc380 */
+    {USB_DEVICE(0x046d, 0x08a9)},	/* Logitech Notebook Deluxe */
+    {USB_DEVICE(0x046d, 0x08aa)},	/* Labtec Webcam  Notebook */
+    {USB_DEVICE(0x04f1, 0x1001)},	/* JVC GC A50 */
+    {USB_DEVICE(0x0497, 0xc001)},	/* Smile International */
+    {USB_DEVICE(0x041e, 0x4012)},	/* PC-Cam350 */
+    {USB_DEVICE(0x0ac8, 0x303b)},	/* Vimicro 0x303b */
+    {USB_DEVICE(0x093a, 0x2468)},	/* PAC207 */
+    {USB_DEVICE(0x093a, 0x2471)},	/* PAC207 Genius VideoCam ge111 */
+    {USB_DEVICE(0x093a, 0x2460)},	/* PAC207 Qtec Webcam 100 */
+    {USB_DEVICE(0x0733, 0x3281)},	/* Cyberpix S550V */
+    {USB_DEVICE(0x093a, 0x2470)},	/* Genius GF112 */
+    {USB_DEVICE(0x046d, 0x08a6)},	/* Logitech QCim */
+    {USB_DEVICE(0x08ca, 0x2020)},	/* Aiptek Slim 3000F */
+    {USB_DEVICE(0x0698, 0x2003)},	/* CTX M730V built in */
+    {USB_DEVICE(0x0c45, 0x6001)},	/* Genius VideoCAM NB */
+    {USB_DEVICE(0x041E, 0x4028)},	/* Creative Webcam Vista Plus */
+    {USB_DEVICE(0x0471, 0x0325)},	/* Philips SPC 200 NC */
+    {USB_DEVICE(0x0471, 0x0328)},	/* Philips SPC 700 NC */
+    {USB_DEVICE(0x0c45, 0x6040)},	/* Speed NVC 350K */
+    {USB_DEVICE(0x055f, 0xc230)},	/* Mustek Digicam 330K */
+    {USB_DEVICE(0x0c45, 0x6007)},	/* Sonix sn9c101 + Tas5110D */
+    {USB_DEVICE(0x0471, 0x0327)},	/* Philips SPC 600 NC */
+    {USB_DEVICE(0x0471, 0x0326)},	/* Philips SPC 300 NC */
+    {USB_DEVICE(0x0c45, 0x6019)},	/* Generic Sonix OV7630 */
+    {USB_DEVICE(0x0c45, 0x6024)},	/* Generic Sonix Tas5130c */
+    {USB_DEVICE(0x046d, 0x08a7)},	/* Logitech QuickCam Image */
+    {USB_DEVICE(0x04fc, 0x500c)},	/* Sunplus CA500C */
+    {USB_DEVICE(0x055f, 0xc232)},	/* Mustek MDC3500 */
+    {USB_DEVICE(0x046d, 0x08ac)},	/* Logitech QuickCam Cool*/
+    {USB_DEVICE(0x046d, 0x08d9)},	/* Logitech QuickCam IM/Connect */
+    {USB_DEVICE(0x046d, 0x08da)},	/* Logitech QuickCam Messenger */
+    {USB_DEVICE(0x0000, 0x0000)},	/* MystFromOri Unknow Camera */
+	
+This list represents those cameras that are specifically supported by the
+driver, and should work to some degree 'out of the box'. A full list of the
+cameras known to the project maintainers can be found on
+http://mxhaard.free.fr/spca5xx.html.
+How do I use it?
+================
+
+Well, first you need to compile the driver (see below), then you need to make
+sure that the v4l infrastructure is set up and then load the driver. After
+you've done that, any v4l enabled application, such as spcaview, gqcam, xawtv,
+gnomemeeting, camE etc should work.
+
+Supported kernel versions
+=========================
+The driver should compile and run successfully against most stable versions of
+the official Linux 2.6.x kernel upto version 2.6.11 (from <http://www.kernel.org/>)
+
+Compiling it
+============
+The driver module can be built without modifying your kernel source tree.
+
+Before trying to compile the driver, ensure that you've configured your
+kernel, and updated the dependencies:
+'make [config|menuconfig|xconfig]; make dep'.
+
+Make sure, when compiling the driver, you use the same version of compiler as
+was used to compile your kernel. Not doing so can create incompatible binaries.
+
+as root
+goes to gspcav1 directory and run:
+./gspca_build 
+
+if all goes right the module is compiled and load in memory
+if not, errors messages can be found in kgspca.err You should post this file to the maintainer
+or in the sourceforge project bugs report. <http://sourceforge.net/projects/spca50x/>.
+
+Trying a v4l app
+================
+goes to gspcagui directory
+be sure to have libsdl installed with the header
+then
+make
+as root
+make install
+Plug your webcam and run
+gspcagui -d /dev/video0
+adjust video0 to your hardware
+Press the G button and wait for the webcam probe
+you can now play, the two windows are active 
+mouse can be used to select a Region of Interess within the grabbing windows
+then press the center of the pad to zoom:)
+Picture and avi are implemented just press the button to start/stop
+
+How about downloading pictures from it, or videos?
+==================================================
+This driver is a v4l driver, whose scope is only streaming video. Support for
+downloading images and movies for a lot of spca50x cameras is provided as part
+of the gphoto2 project, which can be found at: <http://www.gphoto.org>.
+
+Limitations and known problems
+==============================
+Support for some bridges is not complete yet. 
+Not all resolutions work. 
+The driver as a whole is experimental. 
+
+This is a mighty fine project, how can I learn more about it?
+=============================================================
+<http://spca50x.sourceforge.net/> (nuff said)
+
+
+I want to whine regularly, where can I?
+=======================================
+Please address all support requests to <spca50x-devs@lists.sourceforge.net>,
+or use the support/patch/bug tracking features provided by sourceforge on our
+project page <http://sourceforge.net/projects/spca50x/>.
+
+Who can I blame?
+================
+gspca kernel 2.6.x and generic chips driver:
+-------------------------------------------
+Current gspca maintainer and project lead: Michel Xhaard 
+Michel Xhaard (mxhaard) <mxhaard at magic dot fr>
+Serge A. Suchkov >Serge.A.S at tochka dot ru>
+Adam Richter <adam at yggdrasil dot com>
+Tomas Groth (tgc) <tomasgroth at yahoo dot dk>
+Thomas Kaiser <webcam at kaiser-linux dot li>
+Credits spca5xx:
+----------------
+Current spca5xx maintainer Michel Xhaard (mxhaard) 
+Michel Xhaard (mxhaard) <mxhaard at magic dot fr>
+Reza Jelveh (timebomb) <reza.jelveh at tuhh dot de>
+Tomas Groth (tgc) <tomasgroth at yahoo dot dk>
+Thomas Kaiser <webcam at kaiser-linux dot li>
+Andrzej Szombierski for the cool spca561 video decompressor:).
+Bertrik Stikken for the great Sonix video decompressor:).
+And of course all people reporting webcams (id snoop patch and testing available in the Changelog files)
+Original spca50x authors:
+-------------------------
+Joel Crisp <jcrisp@blueyonder.co.uk>
+Current spca50x maintainer and project lead: Miah Gregory <mace@darksilence.net>
+Francois Beerten <feber@users.sourceforge.net>
+Miah Gregory <mace@darksilence.net>
+Till Adam <till@hubbahubba.de>
+Michel Xhaard (mxhaard) <mxhaard at magic dot fr>
+The jpeg decoder was originally written by Michael Schroeder <mls@suse.de>
+and adjusted to our purposes. All bugs are ours, all features his.
+Credits (quoting Joel):
+Thanks to all the authors of the ov511 driver and its ancestors.
+Thanks to Darrell Scott for debug assistance and suggestions.
+Thanks to Razvan Surdulescu for kicking me back into action.
+Thanks to Bill Roehl for traces on the Create and Share (id 0x401). I WILL
+            make this work... or die trying...
+Thanks to everyone who has tested this driver and given me feedback on it.
+
+A note on Sunplus Z-star Vimicro Conexant Transvision Etoms Pixart Mars-Semi and our interaction with them so far
+=================================================================================================================
+Several of us have tried, at various times, to obtain information on the
+bridge and sensors chips from these Manufacturers, but have failed, seemingly due to a lack of
+interest to cooperate on their part. Therefore, this driver is the result of
+reverse engineering the protocols and functionality provided by these chips.
+This limits what we can do, and it limits the quality of the driver. We would
+much prefer to fully support all the features the chips provide, but without
+Manufacturers supplying us with the needed specifications and technical
+documentation, this is unlikely to happen.
+
+This project benefits from Logitech's help
+
+Moissy le 08 May 2006
+Michel Xhaard
+http://mxhaard.free.fr

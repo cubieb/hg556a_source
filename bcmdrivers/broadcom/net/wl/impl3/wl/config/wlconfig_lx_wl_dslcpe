@@ -1,0 +1,188 @@
+# Broadcom 802.11abg Networking Device Driver Configuration file
+#
+# Copyright 2007, Broadcom Corporation
+# All Rights Reserved.
+# 
+# THIS SOFTWARE IS OFFERED "AS IS", AND BROADCOM GRANTS NO WARRANTIES OF ANY
+# KIND, EXPRESS OR IMPLIED, BY STATUTE, COMMUNICATION OR OTHERWISE. BROADCOM
+# SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
+# FOR A SPECIFIC PURPOSE OR NONINFRINGEMENT CONCERNING THIS SOFTWARE.
+#
+# $Id: wlconfig_lx_wl_dslcpe,v 1.1 2008/08/25 06:42:23 l65130 Exp $
+#
+# src/wl/linux driver config file
+include $(WLCFGDIR)/wlconfig_lx_shared
+include $(WLCFGDIR)/wlconfig_lx_router_ap
+
+ifeq ($(strip $(BRCM_CHIP)),6338)
+WLFLAGS += -DBCMSDIO -DBCMSDIO_EBIDMA -DDSLCPE_SDIO_PIO
+WLPIO=1
+BCMSDIO_SDIOH=1
+BCMSDIO=1
+BCMSDIO_EBIDMA=1
+wl-config     := 6
+else
+WLPIO=0
+wl-config     := 2
+endif
+
+
+#
+#optional config 1 : 11g ap 
+#
+ifeq ($(wl-config),1)
+include $(WLCFGDIR)/wlconfig_nomimo
+# features
+WL11H=0
+WL11D=0
+DBAND=0
+BCMDMA64=0
+
+#supported chips 4318B0
+export SUPPORTED_CHIPS := 4318
+
+EXTRA_CFLAGS += -DD11CONF=0x300
+EXTRA_CFLAGS += -DACONF=0
+EXTRA_CFLAGS += -DGCONF=0x80
+EXTRA_CFLAGS += -DNCONF=0
+EXTRA_CFLAGS += -DLPCONF=0
+
+endif
+
+
+#
+#optional config 2 : 11g/n ap
+#
+ifeq ($(wl-config),2)
+
+# features
+DBAND=0
+
+#supported chips 4318B0 4321(x) 4322(x)
+SUPPORTED_CHIPS := 4318 4321 4322
+
+WLFLAGS += -DD11CONF=0x00011b00
+WLFLAGS += -DACONF=0
+WLFLAGS += -DGCONF=0x00000080
+WLFLAGS += -DNCONF=0x00000001f
+WLFLAGS += -DLPCONF=0
+
+endif
+
+#
+#optional config 3 : 11n ap
+#
+ifeq ($(wl-config),3)
+
+# features
+DBAND=0
+
+#supported chips 4321(x) 4322(x)
+export SUPPORTED_CHIPS := 4321 4322
+
+#4321/4322 configuration
+WLFLAGS += -DD11CONF=0x00011800
+WLFLAGS += -DACONF=0
+WLFLAGS += -DGCONF=0
+WLFLAGS += -DNCONF=0x0000001f
+WLFLAGS += -DLPCONF=0
+
+endif
+
+#
+#optional config 4 : dual band 11gn  ap
+#
+ifeq ($(wl-config),4)
+
+# features
+
+
+#supported chips 4318B0 4321(x) 4322(x)
+SUPPORTED_CHIPS := 4318 4321 4322
+
+WLFLAGS += -DD11CONF=0x00011b00
+WLFLAGS += -DACONF=0x40
+WLFLAGS += -DGCONF=0x00000080
+WLFLAGS += -DNCONF=0x0000001f
+WLFLAGS += -DLPCONF=0
+
+endif
+
+#
+#optional config 5 : ap sta everythig default (largest)
+#
+ifeq ($(wl-config),5)
+include $(WLCFGDIR)/wlconfig_lx_router_apsta
+
+# features
+
+#supported chips default as-is by the driver
+SUPPORTED_CHIPS := 4306 4318 4321 4322
+
+endif
+
+
+#
+#optional config 6 : 4312 SDIO 11g ap
+#
+ifeq ($(wl-config),6)
+include $(WLCFGDIR)/wlconfig_nomimo
+
+# features
+WL11H=0
+WL11D=0
+DBAND=0
+BCMDMA64=0
+WME=0
+BTC2WIRE=0
+WLAFTERBURNER=0
+CRAM=0
+HNDDMA=0
+HNDDMA64=0
+
+#supported chips 4312
+export SUPPORTED_CHIPS := 4312
+
+EXTRA_CFLAGS += -DD11CONF=0x8000
+EXTRA_CFLAGS += -DACONF=0
+EXTRA_CFLAGS += -DGCONF=0
+EXTRA_CFLAGS += -DNCONF=0
+EXTRA_CFLAGS += -DLPCONF=0x2
+endif
+
+
+#
+#optional config 7 : 4318 SDIO 11g ap
+#
+ifeq ($(wl-config),7)
+include $(WLCFGDIR)/wlconfig_nomimo
+
+# features
+WL11H=0
+WL11D=0
+DBAND=0
+BCMDMA64=0
+WME=0
+BTC2WIRE=0
+WLAFTERBURNER=0
+CRAM=0
+HNDDMA=0
+HNDDMA64=0
+
+#supported chips 4318B0
+export SUPPORTED_CHIPS := 4318
+
+EXTRA_CFLAGS += -DD11CONF=0x300
+EXTRA_CFLAGS += -DACONF=0
+EXTRA_CFLAGS += -DGCONF=0x80
+EXTRA_CFLAGS += -DNCONF=0
+EXTRA_CFLAGS += -DLPCONF=0
+endif
+
+WL=1
+DSLCPE=1
+WLLX=1
+WLTIMER=1
+WLRM=0
+WLCQ=0
+BTC2WIRE=0

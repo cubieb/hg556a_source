@@ -1,0 +1,43 @@
+/*
+ * Copyright 2007, Broadcom Corporation
+ * All Rights Reserved.
+ * 
+ * THIS SOFTWARE IS OFFERED "AS IS", AND BROADCOM GRANTS NO WARRANTIES OF ANY
+ * KIND, EXPRESS OR IMPLIED, BY STATUTE, COMMUNICATION OR OTHERWISE. BROADCOM
+ * SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A SPECIFIC PURPOSE OR NONINFRINGEMENT CONCERNING THIS SOFTWARE.
+ *
+ * $Id: epivers.h,v 1.1 2008/08/25 06:41:37 l65130 Exp $
+ *
+*/
+
+#ifndef _epivers_h_
+#define _epivers_h_
+
+#define	EPI_MAJOR_VERSION	4
+
+#define	EPI_MINOR_VERSION	150
+
+#define	EPI_RC_NUMBER		10
+
+#define	EPI_INCREMENTAL_NUMBER	15
+
+#define	EPI_BUILD_NUMBER	0
+
+#define	EPI_VERSION		4, 150, 10, 15
+
+#define	EPI_VERSION_NUM		0x04960a0f
+
+/* Driver Version String, ASCII, 32 chars max */
+#ifdef DSLCPE
+#if defined(BCMSDIO)
+#define	EPI_VERSION_STR		"4.150.10.15.cpe2.2sd"
+#else
+#define	EPI_VERSION_STR		"4.150.10.15.cpe2.2"
+#endif
+#else
+#define	EPI_VERSION_STR		"4.150.10.15"
+#endif
+#define	EPI_ROUTER_VERSION_STR	"4.151.10.15"
+
+#endif /* _epivers_h_ */

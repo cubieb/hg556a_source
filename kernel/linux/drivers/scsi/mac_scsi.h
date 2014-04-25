@@ -1,0 +1,106 @@
+/*
+ * Cumana Generic NCR5380 driver defines
+ *
+ * Copyright 1993, Drew Eckhardt
+ *	Visionary Computing
+ *	(Unix and Linux consulting and custom programming)
+ *	drew@colorado.edu
+ *      +1 (303) 440-4894
+ *
+ * ALPHA RELEASE 1.
+ *
+ * For more information, please consult
+ *
+ * NCR 5380 Family
+ * SCSI Protocol Controller
+ * Databook
+ *
+ * NCR Microelectronics
+ * 1635 Aeroplaza Drive
+ * Colorado Springs, CO 80916
+ * 1+ (719) 578-3400
+ * 1+ (800) 334-5454
+ */
+
+/*
+ * $Log: mac_scsi.h,v $
+ * Revision 1.1  2008/08/26 03:55:33  l65130
+ * 【变更分类】建立基线
+ * 【问题单号】
+ * 【问题描述】
+ * 【修改说明】
+ *
+ * Revision 1.1  2008/06/20 09:26:08  z67625
+ * *** empty log message ***
+ *
+ * Revision 1.1  2008/01/14 05:52:33  z30370
+ * *** empty log message ***
+ *
+ * Revision 1.1  2006/12/20 19:18:42  d55909
+ * *** empty log message ***
+ *
+ * Revision 1.1  2006/11/14 17:06:50  d55909
+ * 新建模块
+ *
+ * Revision 1.1  2006/04/19 05:32:26  z60003055
+ * z60003055：新增BCM306 版本代码基线
+ *
+ */
+
+#ifndef MAC_NCR5380_H
+#define MAC_NCR5380_H
+
+#define MACSCSI_PUBLIC_RELEASE 2
+
+#ifndef ASM
+
+#ifndef CMD_PER_LUN
+#define CMD_PER_LUN 2
+#endif
+
+#ifndef CAN_QUEUE
+#define CAN_QUEUE 16
+#endif
+
+#ifndef SG_TABLESIZE
+#define SG_TABLESIZE SG_NONE
+#endif
+
+#ifndef USE_TAGGED_QUEUING
+#define	USE_TAGGED_QUEUING 0
+#endif
+
+#include <scsi/scsicam.h>
+
+#ifndef HOSTS_C
+
+#define NCR5380_implementation_fields \
+    int port, ctrl
+
+#define NCR5380_local_declare() \
+        struct Scsi_Host *_instance
+
+#define NCR5380_setup(instance) \
+        _instance = instance
+
+#define NCR5380_read(reg) macscsi_read(_instance, reg)
+#define NCR5380_write(reg, value) macscsi_write(_instance, reg, value)
+
+#define NCR5380_pread 	macscsi_pread
+#define NCR5380_pwrite 	macscsi_pwrite
+	
+#define NCR5380_intr macscsi_intr
+#define NCR5380_queue_command macscsi_queue_command
+#define NCR5380_abort macscsi_abort
+#define NCR5380_bus_reset macscsi_bus_reset
+#define NCR5380_device_reset macscsi_device_reset
+#define NCR5380_host_reset macscsi_host_reset
+#define NCR5380_proc_info macscsi_proc_info
+
+#define BOARD_NORMAL	0
+#define BOARD_NCR53C400	1
+
+#endif /* ndef HOSTS_C */
+#endif /* ndef ASM */
+#endif /* MAC_NCR5380_H */
+

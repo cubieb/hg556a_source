@@ -1,0 +1,34 @@
+#<:copyright-gpl
+# Copyright 2004 Broadcom Corp. All Rights Reserved.
+
+# This program is free software; you can distribute it and/or modify it
+# under the terms of the GNU General Public License (Version 2) as
+# published by the Free Software Foundation.
+
+# This program is distributed in the hope it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place - Suite 330, Boston MA 02111-1307, USA.
+#:>
+ifeq ($(strip $(BRCM_CHIP)),6338)
+EXTRA_CFLAGS	+= -DBCMSDIO
+endif
+
+SUPPORTED_CHIPS = 4318 4321 4312 4322
+
+.PHONY : build_srom_map $(SUPPORTED_CHIPS)
+
+build_srom_map : $(SUPPORTED_CHIPS)
+
+$(SUPPORTED_CHIPS):
+	rm -f $(obj)/shared/bcm$@_map.bin
+	$(CC) $(CFLAGS) $(EXTRA_CFLAGS) -I$(obj)/include -c -o $(obj)/shared/bcm$@_map.o $(obj)/shared/bcm$@_map.c
+	$(OBJCOPY) -j .data -O binary $(obj)/shared/bcm$@_map.o $(obj)/shared/bcm$@_map.bin
+	if [ ! -e $(INSTALL_DIR)/etc/wlan ]; then \
+		mkdir $(INSTALL_DIR)/etc/wlan; \
+	fi
+	cp -av $(obj)/shared/bcm$@_map.bin $(INSTALL_DIR)/etc/wlan

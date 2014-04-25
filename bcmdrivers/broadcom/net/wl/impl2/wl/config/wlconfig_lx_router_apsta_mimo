@@ -1,0 +1,22 @@
+# Broadcom 802.11abg Networking Device Driver Configuration file
+#
+# Copyright 2006, Broadcom Corporation
+# All Rights Reserved.
+# 
+# THIS SOFTWARE IS OFFERED "AS IS", AND BROADCOM GRANTS NO WARRANTIES OF ANY
+# KIND, EXPRESS OR IMPLIED, BY STATUTE, COMMUNICATION OR OTHERWISE. BROADCOM
+# SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
+# FOR A SPECIFIC PURPOSE OR NONINFRINGEMENT CONCERNING THIS SOFTWARE.
+#
+# $Id: wlconfig_lx_router_apsta_mimo,v 1.1 2008/08/25 06:41:48 l65130 Exp $
+#
+# Linux Kernel wl driver config file
+
+# get basic configuration
+include $(WLCFGDIR)/wl_default
+
+# features
+include $(WLCFGDIR)/wlconfig_apdef
+STA=1
+BCMSUP_PSK=1
+WET=1

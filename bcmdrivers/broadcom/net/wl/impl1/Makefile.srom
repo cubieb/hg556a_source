@@ -1,0 +1,24 @@
+#  Copyright 2004, Broadcom Corporation
+#  All Rights Reserved.
+#  
+#  This is UNPUBLISHED PROPRIETARY SOURCE CODE of Broadcom Corporation;
+#  the contents of this file may not be disclosed to third parties, copied or
+#  duplicated in any form, in whole or in part, without the prior written
+#  permission of Broadcom Corporation.
+#
+# Makefile for the Broadcom wl srom file
+#
+#
+
+ifneq ($(WLDEVBUILD),)
+$(obj)/../../shared/bcm4306_map.o $(obj)/../../shared/bcm4318_map.o:
+	$(CC) $(CFLAGS) -I$(WLSRCBASE)/include -c -o $@ $*.c
+else
+$(obj)/shared/bcm4306_map.o $(obj)/shared/bcm4318_map.o:
+	$(CC) $(CFLAGS) -I$(obj)/include -c -o $@ $*.c
+endif
+	$(OBJCOPY) -j .data -O binary $@ $*.bin
+	if [ ! -e $(INSTALL_DIR)/etc/wlan ]; then \
+		mkdir $(INSTALL_DIR)/etc/wlan; \
+	fi
+	cp -av $*.bin  $(INSTALL_DIR)/etc/wlan	

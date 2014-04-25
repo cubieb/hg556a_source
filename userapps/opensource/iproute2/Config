@@ -1,0 +1,7 @@
+# Generated config based on /home/zhangchen/test/clean/bcm306/TdE_develope/HGW_V500/kernel/linux/include
+IP_CONFIG_XFRM:=y
+TC_CONFIG_NETEM:=y
+TC_CONFIG_HTB:=y
+TC_CONFIG_HFSC:=y
+SS_CONFIG_VEGAS:=y
+SS_CONFIG_DRS:=y

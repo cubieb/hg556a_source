@@ -1,0 +1,39 @@
+--- includes.h	2008-01-07 13:58:58.000000000 +0800
++++ includes.f.h	2008-01-11 16:03:50.000000000 +0800
+@@ -224,7 +224,7 @@
+ #ifdef GLIBC2
+ #define _LINUX_C_LIB_VERSION_MAJOR     6
+ #include <termios.h>
+-#include <rpcsvc/ypclnt.h>
++//#include <rpcsvc/ypclnt.h>
+ #include <crypt.h>
+ #include <netinet/tcp.h>
+ #include <netinet/ip.h>
+@@ -1173,22 +1173,16 @@
+ 
+ 
+ #ifdef USE_SYSV_IPC
+-#include <sys/ipc.h>
+-#include <sys/sem.h>
+-#include <sys/shm.h>
+-/*#ifdef NO_SEMUN
++#include <linux/ipc.h>
++#include <linux/sem.h>
++#include <linux/shm.h>
++#if 0 //def NO_SEMUN
+ union semun {
+ 	int val;
+ 	struct semid_ds *buf;
+ 	unsigned short *array;
+ };
+-#endif*/
+-union semun {
+-	int val;
+-	struct semid_ds *buf;
+-	unsigned short int *array;
+-	struct seminfo *__buf;
+-};
++#endif
+ #if defined(HPUX) && defined(HPUX10)
+ #ifdef SEMMSL
+ #undef SEMMSL
